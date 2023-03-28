@@ -83,6 +83,10 @@ public class Client2 {
                         }
                         System.out.println("Выберите от 1 до " + count);
                         int choice = in.nextInt();
+                        while(choice<1 || choice>count){
+                            System.out.println("Вы ввели некоректное число, введите еще раз число от 1 до "+ count);
+                            choice = in.nextInt();
+                        }
                         oos.writeUTF(String.valueOf(choice));
                         System.out.println("Вы успешно проголосовали!");
                     }

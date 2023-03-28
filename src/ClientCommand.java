@@ -43,6 +43,7 @@ public class ClientCommand implements Runnable {
                 String words[] = entry.split(" ");
                 if (words[0].equals("exit"))
                     break;
+                if(words.length>1){
                 if (words[0].equals("login") && words[1].startsWith("-u=")) {
                     username= words[1].substring(3);
                     out.writeUTF("Вы успешно вошли, " + username);
@@ -54,8 +55,8 @@ public class ClientCommand implements Runnable {
                         String topic = words[2].substring(3);
                         String dir = System.getProperty("user.dir");
                         dir += "\\chapters\\" + topic;
-                        File file =new File(dir);
-                        if(file.exists()){
+                        File file = new File(dir);
+                        if (file.exists()) {
                             out.writeUTF("Такой раздел уже существует");
                             continue;
                         }
@@ -69,22 +70,22 @@ public class ClientCommand implements Runnable {
                         String ans = "";
                         int count = 0;
                         for (File file : dir4.listFiles()) {
-                            if(file.getName().equals(topic)) {
+                            if (file.getName().equals(topic)) {
                                 count++;
                                 ans += "Раздел - " + file.getName() + ". ";
-                                ans += " Кол-во голосований - " + file.listFiles().length ;
+                                ans += " Кол-во голосований - " + file.listFiles().length;
                             }
                         }
-                        if(count == 0)
-                            ans = "Разделы с именем "+topic+" не найдены";
+                        if (count == 0)
+                            ans = "Разделы с именем " + topic + " не найдены";
                         out.writeUTF(ans);
                     } else if (words[0].equals("view") && words.length >= 3 && words[1].startsWith("-t=") && words[2].startsWith("-v=")) {
 
                         String topic = words[1].substring(3);
                         String vote = words[2].substring(3);
-                        String path_dir = "chapters\\"+topic+"\\"+vote+".txt";
+                        String path_dir = "chapters\\" + topic + "\\" + vote + ".txt";
                         File file = new File(path_dir);
-                        if(!file.exists()){
+                        if (!file.exists()) {
                             out.writeUTF("Файл не найден");
                             continue;
                         }
@@ -103,9 +104,9 @@ public class ClientCommand implements Runnable {
                         reader.close();
                     } else if (words[0].equals("create") && words[1].equals("vote") && words[2].startsWith("-t=")) {
                         String topic = words[2].substring(3);
-                        String dir_path = System.getProperty("user.dir")+"\\chapters\\"+topic;
+                        String dir_path = System.getProperty("user.dir") + "\\chapters\\" + topic;
                         File file_topic = new File(dir_path);
-                        if(!file_topic.exists()){
+                        if (!file_topic.exists()) {
                             out.writeUTF("Такой раздел не существует");
                             continue;
                         }
@@ -116,21 +117,20 @@ public class ClientCommand implements Runnable {
                         objInput = new ObjectInputStream(clientSocket.getInputStream());
                         List<String> list;
                         list = (List<String>) objInput.readObject();
-                        List<String>lines = new ArrayList<>();
+                        List<String> lines = new ArrayList<>();
                         lines.add(topic_vote);
                         lines.addAll(list);
                         lines.add(username);
-                        Path file =Paths.get("chapters\\"+topic+"\\"+name_vote+".txt");
-                        Files.write(file,lines, StandardCharsets.UTF_8);
+                        Path file = Paths.get("chapters\\" + topic + "\\" + name_vote + ".txt");
+                        Files.write(file, lines, StandardCharsets.UTF_8);
                         out.writeUTF("Голосование успешно создано");
-                    }
-                    else if(words[0].equals("vote") && words[1].startsWith("-t=") && words[2].startsWith("-v")){
+                    } else if (words[0].equals("vote") && words[1].startsWith("-t=") && words[2].startsWith("-v")) {
 
                         String topic = words[1].substring(3);
                         String vote = words[2].substring(3);
-                        String path_dir = "chapters\\"+topic+"\\"+vote+".txt";
+                        String path_dir = "chapters\\" + topic + "\\" + vote + ".txt";
                         File file = new File(path_dir);
-                        if(!file.exists()){
+                        if (!file.exists()) {
                             out.writeUTF("FileNotFound");
                             continue;
                         }
@@ -147,25 +147,24 @@ public class ClientCommand implements Runnable {
                         objOutput.writeObject(lines);
                         String choice = in.readUTF();
                         String wordss[] = lines.get(Integer.parseInt(choice)).split(" ");
-                        int kol = Integer.parseInt(wordss[wordss.length-1])+1;
+                        int kol = Integer.parseInt(wordss[wordss.length - 1]) + 1;
                         String str = "";
-                        for(int j = 0;j<wordss.length-1;++j)
-                        {
-                            str += wordss[j]+" ";
+                        for (int j = 0; j < wordss.length - 1; ++j) {
+                            str += wordss[j] + " ";
                         }
-                        str+=kol;
-                        lines.set(Integer.parseInt(choice),str);
-                        Path file1 =Paths.get("chapters\\"+topic+"\\"+vote+".txt");
-                        Files.write(file1,lines,StandardCharsets.UTF_8);
+                        str += kol;
+                        lines.set(Integer.parseInt(choice), str);
+                        Path file1 = Paths.get("chapters\\" + topic + "\\" + vote + ".txt");
+                        Files.write(file1, lines, StandardCharsets.UTF_8);
                         fr.close();
                         reader.close();
-                    }else if(words[0].equals("delete") && words[1].startsWith("-t=") && words[2].startsWith("-v=")){
+                    } else if (words[0].equals("delete") && words[1].startsWith("-t=") && words[2].startsWith("-v=")) {
                         String topic = words[1].substring(3);
                         String vote = words[2].substring(3);
-                        String dir=System.getProperty("user.dir");
-                        dir+="\\chapters\\"+topic+"\\"+vote+".txt";
+                        String dir = System.getProperty("user.dir");
+                        dir += "\\chapters\\" + topic + "\\" + vote + ".txt";
                         File file = new File(dir);
-                        if(!file.exists()){
+                        if (!file.exists()) {
                             out.writeUTF("Файл не найден");
                             continue;
                         }
@@ -179,24 +178,26 @@ public class ClientCommand implements Runnable {
                         }
                         fr.close();
                         reader.close();
-                        if(username.equals(lines.get(lines.size()-1))){
-                            if(file.delete()) {
+                        if (username.equals(lines.get(lines.size() - 1))) {
+                            if (file.delete()) {
                                 out.writeUTF("Успешно удалено");
-                            }else{
+                            } else {
                                 out.writeUTF("Файл не найден");
                             }
-                        }else{
+                        } else {
                             out.writeUTF("Нет прав доступа");
                         }
 
-                    }else if(words[0].equals("exit")){
+                    } else if (words[0].equals("exit")) {
                         out.writeUTF("До свидания");
                         clientSocket.close();
-                    }else{
+                    } else {
                         out.writeUTF("Неизвестный запрос");
                     }
+                }
 
                 }
+                else out.writeUTF("Запрос слишком короткий, введите коректный");
                 out.flush();
             }
             in.close();
