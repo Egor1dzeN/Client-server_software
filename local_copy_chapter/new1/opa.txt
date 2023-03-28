@@ -1,7 +1,0 @@
-opa
-one 4
-two 0
-three 0
-
-
-egor
