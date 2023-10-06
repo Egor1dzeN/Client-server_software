@@ -16,6 +16,8 @@ public class Server {
             server = new ServerSocket(8081);
             String dir = System.getProperty("user.dir");
             String dir1 = dir + "\\chapters";
+
+            // Создаем директорию (если она отсутствует), в которой будут храниться голосования
             File theDir = new File(dir1);
             if (!theDir.exists()) {
                 Files.createDirectory(Path.of(dir1));
@@ -27,13 +29,18 @@ public class Server {
             }
             System.out.println("Сервер запущен!");
             server_thread = new ServerCommand();
+
+            //Создаем поток для серверных команд
             Thread myThready = new Thread(server_thread);
             myThready.start();
 
             while (work) {
                 try {
+                    //Подключение клиента
                     Socket client = server.accept();
                     System.out.println("Подключился клиент!  " + client.getLocalAddress());
+
+                    //Создаем поток для обработки клиентских команд
                     ClientCommand clientSock
                             = new ClientCommand(client);
                     new Thread(clientSock).start();

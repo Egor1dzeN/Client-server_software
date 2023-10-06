@@ -24,22 +24,26 @@ public class Client {
                     oos.flush();
                     String server_ans = ois.readUTF();
                     System.out.println(server_ans);
+
+
+                    //При создании голосования
                     if (server_ans.equals("create")) {
                         System.out.print("Введите название голосования: ");
                         String name_vote = br.readLine();
-                        System.out.println();
-                        System.out.print("Введите тему голосования: ");
+
+                        System.out.print("\nВведите тему голосования: ");
                         String topic_vote = br.readLine();
-                        System.out.println();
-                        System.out.print("Введите количество вариантов ответа: ");
+
+                        System.out.print("\nВведите количество вариантов ответа: ");
                         int count_vote = Integer.valueOf(br.readLine());
-                        System.out.println();
                         List<String> list = new ArrayList<>();
-                        System.out.println("Введите варианты ответов: ");
+
+                        System.out.println("\nВведите варианты ответов: ");
                         for (int i = 1; i <= count_vote; ++i) {
                             System.out.print(i + ". ");
                             list.add(br.readLine() + " 0");
                         }
+                        //Отправляем на сервер все данные
                         oos.writeUTF(name_vote);
                         oos.writeUTF(topic_vote);
                         oos.writeUTF(String.valueOf(count_vote));
@@ -47,7 +51,9 @@ public class Client {
                         objOut.writeObject(list);
                         String ans = ois.readUTF();
                         System.out.println(ans);
-                    } else if (server_ans.equals("view")) {
+                    }
+                    //Отображение информации о голосовании
+                    else if (server_ans.equals("view")) {
                         objIn = new ObjectInputStream(socket.getInputStream());
                         List<String> list = (List<String>) objIn.readObject();
                         for (int i = 0; i < list.size(); ++i) {
@@ -63,11 +69,13 @@ public class Client {
 
 
                         }
-                    } else if (server_ans.equals("vote")) {
+                    }
+                    // выбор ответа для голосования
+                    else if (server_ans.equals("vote")) {
 
                         objIn = new ObjectInputStream(socket.getInputStream());
                         List<String> list = (List<String>) objIn.readObject();
-                        System.out.println(list.size());
+//                        System.out.println(list.size());
                         int count = 0;
                         for (int i = 0; i < list.size(); ++i) {
                             if (i == 0) {

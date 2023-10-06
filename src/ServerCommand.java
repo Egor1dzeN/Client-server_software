@@ -15,14 +15,27 @@ public class ServerCommand
         while (true) {
             try {
                 String s = "";
+
+                //Проверяем ввели ли что-то
                 if (br.ready()) {
+
+                    //Считываем, что ввел пользователь
                     s = br.readLine();
+                    //Разбиваем команду на слова
                     String words[] = s.split(" ");
                     String type_commamd = words[0];
+                    /*
+                      После того как разбили введенную команду на слова,
+                      проверяем первое слово на соответствие команде (load,save,exit)
+                     */
+
+                    //Загружаем голосование в папку download
                     if (type_commamd.equals("load")) {
                         String filename = words[1];
                         try {
+
                             File file = new File(filename);
+                            //Проверяем существует ли файл и правильный ли формат файла
                             if(!file.exists()){
                                 System.err.println("Файл не найден");
                                 continue;
@@ -39,6 +52,7 @@ public class ServerCommand
                                 lines.add(line);
                                 line = reader.readLine();
                             }
+                            //Сохраняем файл в папку download
                             Path file_path = Paths.get("chapters\\download\\" + file.getName());
                             Files.write(file_path, lines, StandardCharsets.UTF_8);
                             System.out.println("Файл был добавлен в папку download");
@@ -47,7 +61,9 @@ public class ServerCommand
                         }catch (FileNotFoundException e){
                             System.err.println("Файл не найден");
                         }
-                    } else if (type_commamd.equals("save")) {
+                    }
+                    //сохраняем все папки из chapters в указанную папку
+                    else if (type_commamd.equals("save")) {
                         String filename = words[1];
                         File file = new File(filename);
                         String path_chapters = System.getProperty("user.dir")+"\\chapters";
@@ -68,7 +84,9 @@ public class ServerCommand
                             }
                             System.out.println("Все данные успешно сохранены в папке!");
                         }
-                    } else if (words[0].equals("exit")) {
+                    }
+                    //Выключаем сервер
+                    else if (words[0].equals("exit")) {
                         Server.server.close();
                         Server.work = false;
                         break;
