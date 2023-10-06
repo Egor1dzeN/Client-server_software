@@ -15,14 +15,14 @@ public class Server {
         try {
             server = new ServerSocket(8081);
             String dir = System.getProperty("user.dir");
-            String dir1 =dir+"\\chapters";
+            String dir1 = dir + "\\chapters";
             File theDir = new File(dir1);
-            if (!theDir.exists()){
+            if (!theDir.exists()) {
                 Files.createDirectory(Path.of(dir1));
             }
-            String dir2 =dir1+ "\\download";
+            String dir2 = dir1 + "\\download";
             theDir = new File(dir2);
-            if (!theDir.exists()){
+            if (!theDir.exists()) {
                 Files.createDirectory(Path.of(dir2));
             }
             System.out.println("Сервер запущен!");
@@ -33,12 +33,11 @@ public class Server {
             while (work) {
                 try {
                     Socket client = server.accept();
-                    System.out.println("Подключился клиент!  "+client.getLocalAddress());
+                    System.out.println("Подключился клиент!  " + client.getLocalAddress());
                     ClientCommand clientSock
                             = new ClientCommand(client);
                     new Thread(clientSock).start();
-                }
-                catch (SocketException e){
+                } catch (SocketException e) {
                     break;
                 }
 
